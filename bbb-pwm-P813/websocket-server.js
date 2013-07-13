@@ -10,11 +10,11 @@ wss.on('connection', function(ws) {
     ws.on('message', function(message) {
         console.log('received: ' + message);
         if (message == 'servoOff') {
-            //pwm.turnOff();
+            pwm.turnOff();
             ws.send('PWM OFF');
         }
         else if (message == 'servoOn') {
-            //pwm.turnOn();
+            pwm.turnOn();
             ws.send('PWM On');
         }
         else {
