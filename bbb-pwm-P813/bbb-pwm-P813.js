@@ -5,7 +5,6 @@ var exec = require('child_process').exec;
 var bbbPWMP813 = (function () {
 
     function bbbPWMP813() {
-        console.log('contructor bbbPWMP813.....');
         this.configurePath();
     }
 
