@@ -1,2 +1,2 @@
-BeagleBone-Black
+beaglebone-black
 ================
