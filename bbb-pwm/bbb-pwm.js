@@ -1,30 +1,16 @@
 var fs = require('fs');
 var Q = require('q');
-var exec = require('child_process').exec;
 
 var bbbPWM = (function () {
 
-    function bbbPWM(pwmPath, period) {
+    function bbbPWM(pwmDevicePath, period) {
+        bbbPWM.devicePath = pwmDevicePath;
         bbbPWM.PERIOD = period;
-        bbbPWM.RUN_PATH = pwmPath + 'run';
-        bbbPWM.DUTY_PATH = pwmPath + 'duty';
-        bbbPWM.PERIOD_PATH = pwmPath + 'period';
+        bbbPWM.RUN_PATH = bbbPWM.devicePath + 'run';
+        bbbPWM.DUTY_PATH = bbbPWM.devicePath + 'duty';
+        bbbPWM.PERIOD_PATH = bbbPWM.devicePath + 'period';
         this.configureDevice();
     }
-
-    bbbPWM.prototype.execCommand = function (command) {
-        var deferred = Q.defer();
-        exec(command, function (error) {
-            if (error) {
-                deferred.reject(error);
-            }
-            else {
-                console.log('execCommand success: ' + command);
-                deferred.resolve();
-            }
-        });
-        return deferred.promise;
-    };
 
     bbbPWM.prototype.writeFile = function (file, content) {
         var deferred = Q.defer();
@@ -49,30 +35,21 @@ var bbbPWM = (function () {
         }
     };
 
-    bbbPWM.prototype.turnOff = function(){
+    bbbPWM.prototype.turnOff = function () {
         this.writeFile(bbbPWM.RUN_PATH, '0');
     };
 
-    bbbPWM.prototype.turnOn = function(){
+    bbbPWM.prototype.turnOn = function () {
         this.writeFile(bbbPWM.RUN_PATH, '1');
     };
 
     bbbPWM.prototype.configureDevice = function () {
         var _this = this;
-        this.execCommand('chmod 666 ' + bbbPWM.DUTY_PATH).then(function () {
-            console.log('set permissions period_path...');
-            return _this.execCommand('chmod 666 ' + bbbPWM.PERIOD_PATH);
+
+        this.writeFile(bbbPWM.RUN_PATH, '1').then(function () {
+            return _this.writeFile(bbbPWM.PERIOD_PATH, bbbPWM.PERIOD);
         }).then(function () {
-                console.log('set permissions run_path...');
-                return _this.execCommand('chmod 666 ' + bbbPWM.RUN_PATH);
-            }).then(function () {
-                console.log('set run...');
-                return _this.writeFile(bbbPWM.RUN_PATH, '1');
-            }).then(function () {
-                console.log('set period...');
-                return _this.writeFile(bbbPWM.PERIOD_PATH, bbbPWM.PERIOD);
-            }).then(function () {
-                console.log('initialized PWM P8 13......');
+                console.log('PWM Configured: ' + bbbPWM.devicePath);
             }, _this.errorHandler).done();
     };
 
