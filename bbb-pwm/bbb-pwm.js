@@ -3,12 +3,11 @@ var Q = require('q');
 
 var bbbPWM = (function () {
 
-    function bbbPWM(pwmDevicePath, period) {
-        bbbPWM.devicePath = pwmDevicePath;
+    function bbbPWM(pwmPath, period) {
         bbbPWM.PERIOD = period;
-        bbbPWM.RUN_PATH = bbbPWM.devicePath + 'run';
-        bbbPWM.DUTY_PATH = bbbPWM.devicePath + 'duty';
-        bbbPWM.PERIOD_PATH = bbbPWM.devicePath + 'period';
+        bbbPWM.RUN_PATH = pwmPath + 'run';
+        bbbPWM.DUTY_PATH = pwmPath + 'duty';
+        bbbPWM.PERIOD_PATH = pwmPath + 'period';
         this.configureDevice();
     }
 
@@ -49,7 +48,7 @@ var bbbPWM = (function () {
         this.writeFile(bbbPWM.RUN_PATH, '1').then(function () {
             return _this.writeFile(bbbPWM.PERIOD_PATH, bbbPWM.PERIOD);
         }).then(function () {
-                console.log('PWM Configured: ' + bbbPWM.devicePath);
+                console.log('PWM Configured...');
             }, _this.errorHandler).done();
     };
 
