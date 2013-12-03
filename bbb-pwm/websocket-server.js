@@ -13,6 +13,9 @@ var pwm = new bbbPWM('/sys/devices/ocp.2/pwm_test_P8_13.10/', 5000000);
 // Handle connections
 wss.on('connection', function(ws) {
 
+    // Send message to client that connection has been made.
+    ws.send('BBB WebSocket Server Connected!!!');
+
     // Handle incoming messages.
     ws.on('message', function(message) {
 
